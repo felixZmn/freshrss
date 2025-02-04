@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "freshrss.fullname" . }}-db
+  labels: 
+  {{- include "freshrss.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: db
+      {{- include "freshrss.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: db
+        {{- include "freshrss.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: postgres
+          image: postgres
+          envFrom:
+            - secretRef:
+                name: {{ include "freshrss.fullname" . }}
+          env:
+            - name: POSTGRES_DB
+              value: "freshrss"
+            - name: POSTGRES_USER
+              value: "freshrss"
+            - name: POSTGRES_PASSWORD
+              value: "freshrss"
+          volumeMounts:
+            - name: pgsql-data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: pgsql-data
+          persistentVolumeClaim:
+            claimName: {{ include "freshrss.fullname" . }}-pvc-db
+      restartPolicy: Always

@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "freshrss.fullname" . }}
+  labels:
+    app: {{ include "freshrss.name" . }}
+data:
+  FRESHRSS_ENV: development
+  TZ: "Europe/Paris"
+  CRON_MIN: "1,31"
+  FRESHRSS_INSTALL: |-
+    --api-enabled 
+    --base-url {{if .Values.ingress.tls.enabled}}https{{else}}http{{end}}://{{.Values.ingress.host}}
+    --db-base {{.Values.db.database}} 
+    --db-host {{ include "freshrss.fullname" . }}-db.{{.Release.Namespace}}.svc.cluster.local 
+    --db-password {{.Values.db.password}} 
+    --db-type pgsql 
+    --db-user {{.Values.db.username}} 
+    --default-user admin
+    --language {{.Values.freshrss.lang}}
+  FRESHRSS_USER: |-
+    --api-password {{.Values.freshrss.admin.apiPassword}}
+    --email {{.Values.freshrss.admin.email}}
+    --language {{.Values.freshrss.lang}}
+    --password {{.Values.freshrss.admin.password}}
+    --user admin

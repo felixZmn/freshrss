@@ -1,0 +1,19 @@
+freshrss:
+  lang: de
+  admin:
+    email: ""
+    apiPassword: ""
+    password: ""
+
+ingress:
+  host: ""
+  ingressClassName: nginx
+  annotations: {}
+  tls:
+    enabled: true
+    secretName: "freshrss-tls"
+    issuer: ""
+db:
+  username: ""
+  password: ""
+  database: ""

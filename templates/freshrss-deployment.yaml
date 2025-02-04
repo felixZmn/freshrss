@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "freshrss.fullname" . }}
+  labels:
+    app: {{ include "freshrss.name" . }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: freshrss
+      {{- include "freshrss.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: freshrss
+        {{- include "freshrss.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: freshrss
+          image: freshrss/freshrss
+          ports:
+            - containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: {{ include "freshrss.fullname" . }}
+          volumeMounts:
+            - name: freshrss-data
+              mountPath: /var/www/FreshRSS/data
+            - name: freshrss-extensions
+              mountPath: /var/www/FreshRSS/extensions
+            - name: freshrss-temp
+              mountPath: /tmp
+            - name: freshrss-log
+              mountPath: /var/log
+      volumes:
+        - name: freshrss-data
+          persistentVolumeClaim:
+            claimName: {{ include "freshrss.fullname" . }}-pvc-data
+        - name: freshrss-extensions
+          persistentVolumeClaim:
+            claimName: {{ include "freshrss.fullname" . }}-pvc-extensions
+        - name: freshrss-temp
+          emptyDir: {}
+        - name: freshrss-log
+          emptyDir: {}
