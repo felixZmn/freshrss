@@ -15,7 +15,7 @@ data:
     --db-host {{ include "freshrss.fullname" . }}-db.{{.Release.Namespace}}.svc.cluster.local 
     --db-password {{.Values.db.password}} 
     --db-type pgsql 
-    --db-user {{.Values.db.username}} 
+    --db-user admin
     --default-user admin
     --language {{.Values.freshrss.lang}}
   FRESHRSS_USER: |-
