@@ -1,0 +1,29 @@
+# This workflow will build the helm chart and push it to ghcr if a semver version tag is pushed
+
+name: Build and push helm chart to ghcr
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Prepare
+        uses: ./.github/workflows/templates/setup.yaml
+
+      - name: Test
+        uses: ./.github/workflows/templates/test.yaml
+
+      - name: Login to ghcr
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io --username ${{ github.actor }} --password-stdin
+
+      - name: Package Helm Chart
+        run: helm package . --version ${{ env.TAG }}
+
+      - name: Push Helm Chart to GHCR
+        run: |
+          helm push freshrss-*.tgz  oci://ghcr.io/${{ github.repository_owner }}/helm

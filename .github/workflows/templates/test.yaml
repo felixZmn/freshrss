@@ -1,0 +1,14 @@
+name: Test Helm Chart
+
+on:
+  workflow_call:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Lint
+        run: helm lint .
+
+      - name: Test
+        run: helm test .

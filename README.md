@@ -9,5 +9,5 @@ helm package .
 helm registry login ghcr.io -u felixZmn
 
 export CHART_VERSION=$(grep -m 1 'version:' ./Chart.yaml | tail -n1 | awk '{ print $2 }')
-helm push freshrss-${CHART_VERSION}.tgz oci://ghcr.io/felixzmn/helm
+helm push freshrss-*.tgz oci://ghcr.io/felixzmn/helm
 ```
