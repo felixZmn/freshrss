@@ -17,3 +17,5 @@ db:
   username: ""
   password: ""
   database: ""
+
+config: {}

@@ -24,3 +24,6 @@ data:
     --language {{.Values.freshrss.lang}}
     --password {{.Values.freshrss.admin.password}}
     --user admin
+  {{- range $key, $value := .Values.config }}
+  {{ $key }}: {{ $value }}
+  {{- end }}
